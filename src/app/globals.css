@@ -1,0 +1,151 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
+body {
+  background-color: #f8f9fa;
+  height: 100%;
+}
+
+#__next {
+  height: 100%;
+}
+
+/* Page container */
+.page-container {
+  padding: 40px 24px;
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 100%;
+  padding-bottom: 100px; /* Space for fixed buttons */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding: 48px 40px;
+    align-items: center;
+  }
+}
+
+/* Touch-friendly buttons */
+.ant-btn {
+  min-height: 48px;
+  font-size: 16px;
+}
+
+/* Card spacing */
+.ant-card {
+  margin-bottom: 16px;
+}
+
+/* Form spacing */
+.ant-form-item {
+  margin-bottom: 20px;
+}
+
+/* KOSE Brand Colors - Cool, water-inspired palette */
+:root {
+  --kose-primary: #4A90E2; /* Cool, mid-tone blue - water-inspired */
+  --kose-secondary: #7BC4E8; /* Light cool blue - moisture/hydration */
+  --kose-light-blue: #E8F4FD; /* Very light cool blue - water reflection */
+}
+
+/* Premium, clean, soft, minimal styling - KOSE Brand */
+.ant-card {
+  border-radius: 8px;
+  border: none;
+  box-shadow: none;
+  background: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.ant-card:hover {
+  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.06);
+}
+
+.ant-btn-primary {
+  background-color: var(--kose-primary);
+  border-color: var(--kose-primary);
+}
+
+.ant-btn-primary:hover {
+  background-color: #3A7BC8;
+  border-color: #3A7BC8;
+}
+
+/* Prevent body scroll when drawer is open */
+body.drawer-open {
+  overflow: hidden;
+}
+
+/* Dashboard Grid Layout - 2 columns on tablet/desktop */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .registration-form-card .ant-card-body {
+    padding: 40px 48px !important;
+  }
+}
+
+/* Drawer alignment with form */
+.form-aligned-drawer .ant-drawer-content-wrapper {
+  max-width: 1040px !important;
+  width: calc(100% - 48px) !important;
+}
+
+@media (min-width: 768px) {
+  .form-aligned-drawer .ant-drawer-content-wrapper {
+    max-width: 1040px !important;
+    width: calc(100% - 80px) !important;
+  }
+}
+
+/* Drawer animation - slide up from bottom with fade in */
+.slide-up-fade-enter,
+.slide-up-fade-appear {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.slide-up-fade-enter-active,
+.slide-up-fade-appear-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-fade-leave {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-up-fade-leave-active {
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
