@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { Input } from 'antd';
+import { Input, InputRef } from 'antd';
 
 interface OtpInputProps {
   value: string;
@@ -11,7 +11,7 @@ interface OtpInputProps {
 }
 
 export function OtpInput({ value, onChange, length = 6, disabled = false }: OtpInputProps) {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef<(InputRef | null)[]>([]);
 
   useEffect(() => {
     inputRefs.current = inputRefs.current.slice(0, length);
@@ -27,13 +27,13 @@ export function OtpInput({ value, onChange, length = 6, disabled = false }: OtpI
 
     // Auto-focus next input
     if (char && index < length - 1) {
-      inputRefs.current[index + 1]?.focus();
+      inputRefs.current[index + 1]?.input?.focus();
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace' && !value[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+      inputRefs.current[index - 1]?.input?.focus();
     }
   };
 
@@ -43,7 +43,7 @@ export function OtpInput({ value, onChange, length = 6, disabled = false }: OtpI
     if (pastedData) {
       onChange(pastedData);
       const lastIndex = Math.min(pastedData.length - 1, length - 1);
-      inputRefs.current[lastIndex]?.focus();
+      inputRefs.current[lastIndex]?.input?.focus();
     }
   };
 
