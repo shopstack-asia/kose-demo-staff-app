@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { staffMock } from '@/mock/staff';
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     // Get token from header
     const authHeader = request.headers.get('authorization');
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Extract user ID from token (mock: token format is mock_token_{id}_{timestamp})
+    // Extract user ID from token
     // Example: mock_token_staff_001_timestamp -> userId = staff_001
     if (token.startsWith('mock_token_')) {
       const parts = token.split('_');
@@ -27,23 +27,45 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      const profile = staffMock.findById(userId);
-      
-      if (!profile) {
+      const body = await request.json();
+      const { currentPassword, newPassword } = body;
+
+      if (!currentPassword || !newPassword) {
         return NextResponse.json(
-          { success: false, error: 'Staff not found' },
-          { status: 404 }
+          { success: false, error: 'Current password and new password are required' },
+          { status: 400 }
+        );
+      }
+
+      // Verify current password
+      if (!staffMock.verifyPassword(userId, currentPassword)) {
+        return NextResponse.json(
+          { success: false, error: 'Current password is incorrect' },
+          { status: 400 }
+        );
+      }
+
+      // Validate new password
+      if (newPassword.length < 6) {
+        return NextResponse.json(
+          { success: false, error: 'New password must be at least 6 characters' },
+          { status: 400 }
+        );
+      }
+
+      // Update password
+      const success = staffMock.updatePassword(userId, newPassword);
+
+      if (!success) {
+        return NextResponse.json(
+          { success: false, error: 'Failed to update password' },
+          { status: 500 }
         );
       }
 
       return NextResponse.json({
         success: true,
-        data: {
-          id: profile.id,
-          username: profile.username,
-          name: profile.name,
-          role: profile.role,
-        },
+        message: 'Password updated successfully',
       });
     }
 
@@ -58,5 +80,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
 

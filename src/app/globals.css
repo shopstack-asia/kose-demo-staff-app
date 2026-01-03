@@ -149,3 +149,40 @@ body.drawer-open {
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* KOSE Brand Tabs - Calm, minimal style */
+.ant-tabs {
+  color: #1a1a1a;
+}
+
+.ant-tabs-tab {
+  padding: 16px 0;
+  margin-right: 32px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #8c8c8c;
+  border: none;
+  transition: color 0.2s ease;
+}
+
+.ant-tabs-tab:hover {
+  color: #4A90E2;
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #4A90E2;
+  font-weight: 500;
+}
+
+.ant-tabs-ink-bar {
+  background: #4A90E2;
+  height: 2px;
+}
+
+.ant-tabs-nav {
+  margin-bottom: 0;
+}
+
+.ant-tabs-nav::before {
+  border-bottom: 1px solid #f0f0f0;
+}
+

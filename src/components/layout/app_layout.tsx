@@ -1,10 +1,11 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Layout, Button, Dropdown, Avatar, Typography } from 'antd';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth_context';
+import { ProfileDrawer } from './profile_drawer';
 import Image from 'next/image';
 
 const { Header, Content } = Layout;
@@ -16,20 +17,27 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, logout, refresh } = useAuth();
+  const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
   };
 
+  const handleProfileClick = () => {
+    setProfileDrawerOpen(true);
+  };
+
+  const handleProfileUpdate = () => {
+    refresh(); // Refresh user data after profile update
+  };
+
   const userMenuItems = [
     {
       key: 'profile',
-      label: 'Profile',
+      label: 'My Profile',
       icon: <UserOutlined />,
-      onClick: () => {
-        // Navigate to profile if needed
-      },
+      onClick: handleProfileClick,
     },
     {
       type: 'divider' as const,
@@ -132,6 +140,13 @@ export function AppLayout({ children }: AppLayoutProps) {
       <Content style={{ padding: '0', backgroundColor: 'transparent', minHeight: 'calc(100vh - 64px)' }}>
         {children}
       </Content>
+
+      <ProfileDrawer
+        open={profileDrawerOpen}
+        onClose={() => setProfileDrawerOpen(false)}
+        userId={user?.id || null}
+        onProfileUpdate={handleProfileUpdate}
+      />
     </Layout>
   );
 }

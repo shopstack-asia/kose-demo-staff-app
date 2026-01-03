@@ -111,7 +111,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refresh = async () => {
-    await checkAuth();
+    try {
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('staff_auth_token');
+        if (token) {
+          // Fetch updated user data from API
+          const response = await apiClient.get<StaffUser>('/auth/me');
+          if (response.success && response.data) {
+            const userData = response.data;
+            localStorage.setItem('staff_user', JSON.stringify(userData));
+            setUser(userData);
+          } else {
+            // Fallback to localStorage if API fails
+            await checkAuth();
+          }
+        } else {
+          await checkAuth();
+        }
+      }
+    } catch (error) {
+      console.error('Refresh failed:', error);
+      // Fallback to localStorage if API fails
+      await checkAuth();
+    }
   };
 
   return (
