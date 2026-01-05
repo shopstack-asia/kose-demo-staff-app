@@ -316,6 +316,10 @@ export const orderMock = {
     return mockOrders.filter((o) => o.customer_id === customerId);
   },
 
+  getAll(): OfflineOrder[] {
+    return [...mockOrders];
+  },
+
   create(order: Omit<OfflineOrder, 'id' | 'created_at' | 'updated_at'>): OfflineOrder {
     const now = new Date().toISOString();
     const orderId = 'order_' + Date.now();

@@ -28,8 +28,16 @@ export function StorePickerDrawer({
   }, [value, open]);
 
   const handleConfirm = () => {
-    if (tempValue && onChange) {
+    if (onChange) {
       onChange(tempValue);
+    }
+    onClose();
+  };
+
+  const handleClear = () => {
+    setTempValue(null);
+    if (onChange) {
+      onChange(null);
     }
     onClose();
   };
@@ -101,19 +109,35 @@ export function StorePickerDrawer({
           >
             Cancel
           </button>
+          {value && (
+            <button
+              onClick={handleClear}
+              style={{
+                padding: '16px 20px',
+                backgroundColor: '#fff',
+                color: '#666',
+                border: '1px solid #d9d9d9',
+                borderRadius: '8px',
+                fontSize: '16px',
+                fontWeight: 500,
+                cursor: 'pointer',
+              }}
+            >
+              Clear
+            </button>
+          )}
           <button
             onClick={handleConfirm}
-            disabled={!tempValue}
             style={{
               flex: 1,
               padding: '16px',
-              backgroundColor: tempValue ? '#4A90E2' : '#ccc',
+              backgroundColor: '#4A90E2',
               color: '#fff',
               border: 'none',
               borderRadius: '8px',
               fontSize: '16px',
               fontWeight: 500,
-              cursor: tempValue ? 'pointer' : 'not-allowed',
+              cursor: 'pointer',
             }}
           >
             Confirm

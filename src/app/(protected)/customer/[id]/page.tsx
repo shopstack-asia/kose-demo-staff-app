@@ -454,23 +454,6 @@ export default function CustomerDetailPage() {
                                     <Text strong style={{ fontSize: '16px', color: '#1a1a1a' }}>
                                       Total: ฿{order.total.toLocaleString()}
                                     </Text>
-                                    <Text
-                                      style={{
-                                        fontSize: '14px',
-                                        color:
-                                          order.status === 'completed'
-                                            ? '#4A90E2'
-                                            : order.status === 'pending'
-                                            ? '#7BC4E8'
-                                            : '#999',
-                                      }}
-                                    >
-                                      {order.status === 'completed'
-                                        ? 'Completed'
-                                        : order.status === 'pending'
-                                        ? 'Pending'
-                                        : 'Cancelled'}
-                                    </Text>
                                   </div>
                                 }
                               />
@@ -561,24 +544,6 @@ export default function CustomerDetailPage() {
             <Descriptions column={1} bordered style={{ marginBottom: 24 }}>
               <Descriptions.Item label="Order Date">
                 {dayjs(selectedOrder.order_date).format('DD MMM YYYY HH:mm')}
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                <Text
-                  style={{
-                    color:
-                      selectedOrder.status === 'completed'
-                        ? '#4A90E2'
-                        : selectedOrder.status === 'pending'
-                        ? '#7BC4E8'
-                        : '#999',
-                  }}
-                >
-                  {selectedOrder.status === 'completed'
-                    ? 'Completed'
-                    : selectedOrder.status === 'pending'
-                    ? 'Pending'
-                    : 'Cancelled'}
-                </Text>
               </Descriptions.Item>
               <Descriptions.Item label="Items">
                 {selectedOrder.items.length} item{selectedOrder.items.length > 1 ? 's' : ''}

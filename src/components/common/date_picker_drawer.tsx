@@ -145,6 +145,7 @@ export function DatePickerDrawer({
     const newDate = viewDate.month(month);
     if (dayjs.isDayjs(newDate)) {
       setViewDate(newDate);
+      // When month is selected, navigate back to day calendar view
       setViewMode('day');
     }
   };
@@ -154,6 +155,7 @@ export function DatePickerDrawer({
     const newDate = viewDate.year(year);
     if (dayjs.isDayjs(newDate)) {
       setViewDate(newDate);
+      // When year is selected, automatically navigate to month selection view
       setViewMode('month');
     }
   };
@@ -243,6 +245,7 @@ export function DatePickerDrawer({
     
     return (
       <div>
+        {renderHeader()}
         <div
           style={{
             display: 'grid',
@@ -250,6 +253,7 @@ export function DatePickerDrawer({
             gap: '8px',
             marginBottom: '16px',
             padding: '0 8px',
+            marginTop: '24px',
           }}
         >
           {weekdays.map((day) => (
@@ -331,12 +335,14 @@ export function DatePickerDrawer({
     if (!dayjs.isDayjs(viewDate)) return null;
     return (
       <div>
+        {renderHeader()}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '12px',
             padding: '0 8px',
+            marginTop: '24px',
           }}
         >
           {months.map((month, index) => {
@@ -377,12 +383,14 @@ export function DatePickerDrawer({
     
     return (
       <div>
+        {renderHeader()}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '12px',
             padding: '0 8px',
+            marginTop: '24px',
           }}
         >
           {years.map((year) => {
@@ -447,6 +455,13 @@ export function DatePickerDrawer({
                 textTransform: 'uppercase',
                 fontWeight: 600,
                 fontSize: '16px',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f5f5f5';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
               }}
             >
               {viewDate.format('MMMM')}
@@ -459,6 +474,13 @@ export function DatePickerDrawer({
                 borderRadius: '4px',
                 fontWeight: 600,
                 fontSize: '16px',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f5f5f5';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
               }}
             >
               {viewDate.format('YYYY')}
@@ -594,10 +616,10 @@ export function DatePickerDrawer({
             block
             size="large"
             onClick={handleConfirm}
-            disabled={!selectedDate}
+            disabled={!selectedDate || !dayjs.isDayjs(selectedDate)}
             style={{ flex: 1 }}
           >
-            Confirm
+            Confirm Date
           </Button>
         </div>
       }
