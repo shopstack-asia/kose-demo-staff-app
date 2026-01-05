@@ -10,6 +10,7 @@ import { StorePickerDrawer } from '@/components/common/store_picker_drawer';
 import { CustomerPickerDrawer } from '@/components/common/customer_picker_drawer';
 import { DatePickerDrawer } from '@/components/common/date_picker_drawer';
 import { apiClient } from '@/lib/api_client';
+import { useAuth } from '@/lib/auth_context';
 import { Store } from '@/mock/store';
 import { CustomerProfile } from '@/mock/customer';
 import { OfflineOrder } from '@/mock/order';
@@ -27,6 +28,8 @@ interface FilterState {
 
 export default function OrderReportPage() {
   const router = useRouter();
+  const { user } = useAuth();
+  const isStaff = user?.role === 'staff';
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState<OfflineOrder[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
@@ -36,7 +39,7 @@ export default function OrderReportPage() {
   const [filters, setFilters] = useState<FilterState>({
     dateFrom: null,
     dateTo: null,
-    storeId: null,
+    storeId: isStaff ? 'store_002' : null, // Auto-select Siam Paragon Counter for staff
     customerId: null,
     purchaseNo: '',
   });
@@ -58,7 +61,13 @@ export default function OrderReportPage() {
       try {
         const response = await apiClient.get<Store[]>('/store/list');
         if (response.success && response.data) {
-          setStores(response.data);
+          // For staff, only show Siam Paragon Counter
+          if (isStaff) {
+            const siamParagon = response.data.find(s => s.id === 'store_002');
+            setStores(siamParagon ? [siamParagon] : []);
+          } else {
+            setStores(response.data);
+          }
         }
       } catch (error) {
         // Handle error silently
@@ -67,7 +76,7 @@ export default function OrderReportPage() {
     fetchStores();
     // Load initial orders on mount
     fetchOrders();
-  }, []);
+  }, [isStaff]);
 
   const handleSearchCustomer = async (query: string) => {
     if (!query || query.trim() === '') {
@@ -284,41 +293,51 @@ export default function OrderReportPage() {
                   Branch / Store
                 </Text>
                 <div
-                  onMouseEnter={() => setStoreHovered(true)}
-                  onMouseLeave={() => setStoreHovered(false)}
+                  onMouseEnter={() => !isStaff && setStoreHovered(true)}
+                  onMouseLeave={() => !isStaff && setStoreHovered(false)}
                   style={{ position: 'relative' }}
                 >
-                  <div onClick={() => setStorePickerOpen(true)} style={{ cursor: 'pointer' }}>
+                  <div 
+                    onClick={() => !isStaff && setStorePickerOpen(true)} 
+                    style={{ cursor: isStaff ? 'not-allowed' : 'pointer' }}
+                  >
                     <Input
                       size="large"
                       placeholder="Select store"
                       readOnly
                       value={selectedStore?.name || ''}
+                      disabled={isStaff}
                       suffix={
-                        selectedStore && storeHovered ? (
-                          <span
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setFilters(prev => ({ ...prev, storeId: null }));
-                            }}
-                            onMouseDown={(e) => e.stopPropagation()}
-                            style={{
-                              cursor: 'pointer',
-                              color: '#999',
-                              padding: '0 4px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              fontSize: '16px',
-                              pointerEvents: 'auto',
-                            }}
-                          >
-                            ✕
-                          </span>
-                        ) : (
-                          <DownOutlined style={{ color: '#999' }} />
+                        isStaff ? null : (
+                          selectedStore && storeHovered ? (
+                            <span
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setFilters(prev => ({ ...prev, storeId: null }));
+                              }}
+                              onMouseDown={(e) => e.stopPropagation()}
+                              style={{
+                                cursor: 'pointer',
+                                color: '#999',
+                                padding: '0 4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                fontSize: '16px',
+                                pointerEvents: 'auto',
+                              }}
+                            >
+                              ✕
+                            </span>
+                          ) : (
+                            <DownOutlined style={{ color: '#999' }} />
+                          )
                         )
                       }
-                      style={{ cursor: 'pointer', pointerEvents: 'none' }}
+                      style={{ 
+                        cursor: isStaff ? 'not-allowed' : 'pointer', 
+                        pointerEvents: 'none',
+                        backgroundColor: isStaff ? '#f5f5f5' : '#fff',
+                      }}
                     />
                   </div>
                 </div>

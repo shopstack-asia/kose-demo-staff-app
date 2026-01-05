@@ -10,6 +10,7 @@ import { StorePickerDrawer } from '@/components/common/store_picker_drawer';
 import { ProductPickerDrawer } from '@/components/common/product_picker_drawer';
 import { DatePickerDrawer } from '@/components/common/date_picker_drawer';
 import { apiClient } from '@/lib/api_client';
+import { useAuth } from '@/lib/auth_context';
 import { Store } from '@/mock/store';
 import { Product } from '@/mock/product';
 import { CustomerProfile } from '@/mock/customer';
@@ -29,6 +30,8 @@ interface OrderItem {
 
 export default function CreateOrderPage() {
   const router = useRouter();
+  const { user } = useAuth();
+  const isStaff = user?.role === 'staff';
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [stores, setStores] = useState<Store[]>([]);
@@ -49,7 +52,17 @@ export default function CreateOrderPage() {
         ]);
 
         if (storesResponse.success && storesResponse.data) {
-          setStores(storesResponse.data);
+          // For staff, only show Siam Paragon Counter
+          if (isStaff) {
+            const siamParagon = storesResponse.data.find(s => s.id === 'store_002');
+            setStores(siamParagon ? [siamParagon] : []);
+            // Auto-set store_id for staff
+            if (siamParagon) {
+              form.setFieldValue('store_id', siamParagon.id);
+            }
+          } else {
+            setStores(storesResponse.data);
+          }
         }
 
         if (productsResponse.success && productsResponse.data) {
@@ -61,7 +74,7 @@ export default function CreateOrderPage() {
     };
 
     fetchData();
-  }, []);
+  }, [isStaff, form]);
 
   const handleSearchCustomer = async (value: string) => {
     if (!value || value.trim() === '') {
@@ -290,27 +303,37 @@ export default function CreateOrderPage() {
             label="Store / Counter"
             rules={[{ required: true, message: 'Please select store' }]}
           >
-            <div onClick={() => setStorePickerOpen(true)} style={{ cursor: 'pointer' }}>
+            <div 
+              onClick={() => !isStaff && setStorePickerOpen(true)} 
+              style={{ cursor: isStaff ? 'not-allowed' : 'pointer' }}
+            >
               <Input
                 size="large"
                 placeholder="Select store"
                 readOnly
+                disabled={isStaff}
                 value={
                   stores.find((s) => s.id === form.getFieldValue('store_id'))?.name || ''
                 }
-                suffix={<DownOutlined style={{ color: '#999' }} />}
-                style={{ cursor: 'pointer', pointerEvents: 'none' }}
+                suffix={!isStaff ? <DownOutlined style={{ color: '#999' }} /> : null}
+                style={{ 
+                  cursor: isStaff ? 'not-allowed' : 'pointer', 
+                  pointerEvents: 'none',
+                  backgroundColor: isStaff ? '#f5f5f5' : '#fff',
+                }}
               />
             </div>
-            <StorePickerDrawer
-              open={storePickerOpen}
-              onClose={() => setStorePickerOpen(false)}
-              value={form.getFieldValue('store_id')}
-              onChange={(storeId) => {
-                form.setFieldValue('store_id', storeId || '');
-              }}
-              stores={stores}
-            />
+            {!isStaff && (
+              <StorePickerDrawer
+                open={storePickerOpen}
+                onClose={() => setStorePickerOpen(false)}
+                value={form.getFieldValue('store_id')}
+                onChange={(storeId) => {
+                  form.setFieldValue('store_id', storeId || '');
+                }}
+                stores={stores}
+              />
+            )}
           </Form.Item>
 
           <Form.Item
