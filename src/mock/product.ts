@@ -45,16 +45,6 @@ export const productsMock: Product[] = [
     is_active: true,
   },
   {
-    id: 'prod_005',
-    code: 'DEC-AQMS-40',
-    name: 'Decorte AQ Meliority Serum',
-    brand: 'Decorte',
-    category: 'Skincare',
-    price: 2800,
-    image_url: '/products/decorte-serum.jpg',
-    is_active: true,
-  },
-  {
     id: 'prod_006',
     code: 'INF-PML-200',
     name: 'Infinity Pure Moisture Lotion',

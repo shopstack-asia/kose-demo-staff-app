@@ -14,7 +14,6 @@ Placeholder images are being used. To use real KOSE product images:
 - `sekkisei-lotion.jpg` - Sekkisei Clear Wellness Lotion
 - `sekkisei-emulsion.jpg` - Sekkisei Clear Wellness Emulsion
 - `sekkisei-wash.jpg` - Sekkisei Clear Wellness Wash
-- `decorte-serum.jpg` - Decorte AQ Meliority Serum
 - `infinity-lotion.jpg` - Infinity Pure Moisture Lotion
 - `infinity-emulsion.jpg` - Infinity Pure Moisture Emulsion
 - `esprique-cream.jpg` - Esprique Precious Rich Cream
