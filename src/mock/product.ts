@@ -45,16 +45,6 @@ export const productsMock: Product[] = [
     is_active: true,
   },
   {
-    id: 'prod_004',
-    code: 'DEC-AQMC-30',
-    name: 'Decorte AQ Meliority Cream',
-    brand: 'Decorte',
-    category: 'Skincare',
-    price: 2500,
-    image_url: '/products/decorte-cream.jpg',
-    is_active: true,
-  },
-  {
     id: 'prod_005',
     code: 'DEC-AQMS-40',
     name: 'Decorte AQ Meliority Serum',
